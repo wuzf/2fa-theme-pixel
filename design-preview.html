@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="Pixel 的静态设计预览，全部账户和验证码为合成数据，未连接 2FA。"
+    />
+    <title>Pixel · 设计预览</title>
+    <link rel="stylesheet" href="./src/styles/tokens.css" />
+    <link rel="stylesheet" href="./src/styles/components.css" />
+  </head>
+  <body class="pixel-theme" data-color-scheme="light" data-pixel-text="true">
+    <a class="pixel-skip-link" href="#accounts">跳到合成账户</a>
+    <svg hidden aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="icon-key" viewBox="0 0 24 24">
+        <path
+          d="M3 5h8v2h2v3h8v4h-3v3h-3v-3h-2v2h-2v2H3v-2H1V7h2zm2 3v7h4V8z"
+          fill-rule="evenodd"
+        />
+      </symbol>
+      <symbol id="icon-plus" viewBox="0 0 24 24">
+        <path d="M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7z" />
+      </symbol>
+      <symbol id="icon-moon" viewBox="0 0 24 24">
+        <path d="M7 2h8v3H9v3H6v8h3v3h8v-3h3v-6h3v8h-3v3H6v-3H3V5h4z" />
+      </symbol>
+      <symbol id="icon-settings" viewBox="0 0 24 24">
+        <path
+          d="M9 1h6v4h4v4h4v6h-4v4h-4v4H9v-4H5v-4H1V9h4V5h4zm0 8v6h6V9z"
+          fill-rule="evenodd"
+        />
+      </symbol>
+      <symbol id="icon-search" viewBox="0 0 24 24">
+        <path
+          d="M5 2h9v3h3v9h-2v2h3v3h3v3h-4v-3h-3v-3H5v-3H2V5h3zm1 4v7h7V6z"
+          fill-rule="evenodd"
+        />
+      </symbol>
+      <symbol id="icon-dots" viewBox="0 0 24 24">
+        <path d="M10 2h4v4h-4zm0 8h4v4h-4zm0 8h4v4h-4z" />
+      </symbol>
+      <symbol id="icon-copy" viewBox="0 0 24 24">
+        <path
+          d="M7 2h14v16h-3V5H7zM3 7h12v15H3zm3 3v9h6v-9z"
+          fill-rule="evenodd"
+        />
+      </symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24">
+        <path
+          d="M3 3h4v4h3v3h4V7h3V3h4v4h-4v3h-3v4h3v3h4v4h-4v-4h-3v-3h-4v3H7v4H3v-4h4v-3h3v-4H7V7H3z"
+        />
+      </symbol>
+    </svg>
+
+    <header class="pixel-topbar">
+      <div class="pixel-topbar-inner">
+        <div class="pixel-brand">
+          <span class="pixel-brand-mark" aria-hidden="true"
+            ><svg class="pixel-icon"><use href="#icon-key" /></svg
+          ></span>
+          <div>
+            <h1 class="pixel-brand-name pixel-display">Pixel / 2FA</h1>
+            <p class="pixel-brand-description">让每一次验证，都清楚一点。</p>
+          </div>
+        </div>
+        <div class="pixel-actions pixel-topbar-actions">
+          <button
+            class="pixel-button is-primary"
+            type="button"
+            disabled
+            title="设计预览，未连接添加账户功能"
+          >
+            <svg class="pixel-icon" aria-hidden="true">
+              <use href="#icon-plus" /></svg
+            >添加账户
+          </button>
+          <button
+            class="pixel-button is-icon"
+            id="scheme-toggle"
+            type="button"
+            aria-label="切换到深色外观"
+            aria-pressed="false"
+            title="切换明暗外观"
+          >
+            <svg class="pixel-icon" aria-hidden="true">
+              <use href="#icon-moon" />
+            </svg>
+          </button>
+          <button
+            class="pixel-button is-icon"
+            type="button"
+            disabled
+            aria-label="设置（设计预览，未连接）"
+            title="设计预览，未连接设置"
+          >
+            <svg class="pixel-icon" aria-hidden="true">
+              <use href="#icon-settings" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="pixel-workspace">
+      <aside class="pixel-preview-note" aria-label="预览说明">
+        <strong>设计预览 · 合成数据 · 未连接 2FA</strong>
+        <span>仅外观切换与菜单展示可操作；验证码静止，业务按钮未启用。</span>
+      </aside>
+
+      <section id="accounts" aria-labelledby="accounts-title">
+        <div class="pixel-section-heading">
+          <h2 class="pixel-section-title" id="accounts-title">
+            我的账户 <span class="pixel-muted">/ 6</span>
+          </h2>
+          <p class="pixel-section-description">
+            卡片样式 · 包含 6 位、8 位及 HOTP 示例
+          </p>
+        </div>
+        <div class="pixel-toolbar">
+          <label class="pixel-search"
+            ><svg class="pixel-icon" aria-hidden="true">
+              <use href="#icon-search" /></svg
+            ><span class="pixel-sr-only">搜索账户（静态示例）</span
+            ><input type="search" placeholder="搜索账户或服务" disabled
+          /></label>
+          <div
+            class="pixel-filter-bar"
+            role="group"
+            aria-label="服务筛选（静态示例）"
+          >
+            <button
+              class="pixel-button"
+              type="button"
+              aria-pressed="true"
+              disabled
+            >
+              全部 <span class="pixel-filter-count">6</span>
+            </button>
+            <button
+              class="pixel-button"
+              type="button"
+              aria-pressed="false"
+              disabled
+            >
+              Google <span class="pixel-filter-count">2</span>
+            </button>
+            <button
+              class="pixel-button"
+              type="button"
+              aria-pressed="false"
+              disabled
+            >
+              GitHub <span class="pixel-filter-count">2</span>
+            </button>
+            <button
+              class="pixel-button"
+              type="button"
+              aria-pressed="false"
+              disabled
+            >
+              其他 <span class="pixel-filter-count">2</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="pixel-account-grid">
+          <article
+            class="pixel-card"
+            aria-label="Google，工作邮箱与团队通知专用账户，合成账户"
+          >
+            <header class="pixel-card-header">
+              <span
+                class="pixel-service-mark"
+                data-tone="green"
+                aria-hidden="true"
+                >G</span
+              >
+              <div class="pixel-account-identity">
+                <p class="pixel-account-service">Google</p>
+                <h3
+                  class="pixel-account-name"
+                  title="工作邮箱与团队通知专用账户"
+                >
+                  工作邮箱与团队通知专用账户
+                </h3>
+                <p
+                  class="pixel-account-address"
+                  title="design.team@example.invalid"
+                >
+                  design.team@example.invalid
+                </p>
+              </div>
+              <details class="pixel-account-menu">
+                <summary aria-label="展示工作邮箱账户菜单">
+                  <svg class="pixel-icon" aria-hidden="true">
+                    <use href="#icon-dots" />
+                  </svg>
+                </summary>
+                <div class="pixel-menu-popover">
+                  <button class="pixel-menu-item" type="button" disabled>
+                    显示二维码</button
+                  ><button class="pixel-menu-item" type="button" disabled>
+                    复制账户 URI</button
+                  ><button class="pixel-menu-item" type="button" disabled>
+                    编辑账户</button
+                  ><button
+                    class="pixel-menu-item is-danger"
+                    type="button"
+                    disabled
+                  >
+                    删除账户
+                  </button>
+                  <p class="pixel-menu-note">菜单样式示例，未连接账户操作。</p>
+                </div>
+              </details>
+            </header>
+            <div class="pixel-otp-label">
+              当前验证码 <span class="pixel-badge">TOTP</span>
+            </div>
+            <div class="pixel-otp-line">
+              <span class="pixel-otp-value" aria-label="合成验证码，482 916"
+                >482 916</span
+              ><button
+                class="pixel-button is-icon"
+                type="button"
+                disabled
+                aria-label="复制验证码（合成数据，未启用）"
+              >
+                <svg class="pixel-icon" aria-hidden="true">
+                  <use href="#icon-copy" />
+                </svg>
+              </button>
+            </div>
+            <p class="pixel-otp-next">
+              下一码 <span class="pixel-next-value">731 204</span>
+            </p>
+            <div class="pixel-expiry">
+              <p class="pixel-expiry-label">
+                <span>有效期示例</span><strong>剩余 24 秒</strong>
+              </p>
+              <div
+                class="pixel-progress"
+                role="img"
+                aria-label="有效期示例，30 秒剩余 24 秒"
+              >
+                <span
+                  class="pixel-progress-fill"
+                  style="--pixel-progress: 80%"
+                ></span>
+              </div>
+            </div>
+          </article>
+
+          <article
+            class="pixel-card"
+            aria-label="Google，个人生活与日常订阅管理账户，合成账户"
+          >
+            <header class="pixel-card-header">
+              <span class="pixel-service-mark" aria-hidden="true">G</span>
+              <div class="pixel-account-identity">
+                <p class="pixel-account-service">Google</p>
+                <h3
+                  class="pixel-account-name"
+                  title="个人生活与日常订阅管理账户"
+                >
+                  个人生活与日常订阅管理账户
+                </h3>
+                <p
+                  class="pixel-account-address"
+                  title="personal.mail@example.invalid"
+                >
+                  personal.mail@example.invalid
+                </p>
+              </div>
+              <details class="pixel-account-menu">
+                <summary aria-label="展示个人邮箱账户菜单">
+                  <svg class="pixel-icon" aria-hidden="true">
+                    <use href="#icon-dots" />
+                  </svg>
+                </summary>
+                <div class="pixel-menu-popover">
+                  <button class="pixel-menu-item" type="button" disabled>
+                    显示二维码</button
+                  ><button class="pixel-menu-item" type="button" disabled>
+                    复制账户 URI</button
+                  ><button class="pixel-menu-item" type="button" disabled>
+                    编辑账户</button
+                  ><button
+                    class="pixel-menu-item is-danger"
+                    type="button"
+                    disabled
+                  >
+                    删除账户
+                  </button>
+                  <p class="pixel-menu-note">菜单样式示例，未连接账户操作。</p>
+                </div>
+              </details>
+            </header>
+            <div class="pixel-otp-label">
+              当前验证码 <span class="pixel-badge">TOTP</span>
+            </div>
+            <div class="pixel-otp-line">
+              <span class="pixel-otp-value" aria-label="合成验证码，297 641"
+                >297 641</span
+              ><button
+                class="pixel-button is-icon"
+                type="button"
+                disabled
+                aria-label="复制验证码（合成数据，未启用）"
+              >
+                <svg class="pixel-icon" aria-hidden="true">
+                  <use href="#icon-copy" />
+                </svg>
+              </button>
+            </div>
+            <p class="pixel-otp-next">
+              下一码 <span class="pixel-next-value">840 362</span>
+            </p>
+            <div class="pixel-expiry">
+              <p class="pixel-expiry-label">
+                <span>有效期示例</span><strong>剩余 24 秒</strong>
+              </p>
+              <div
+                class="pixel-progress"
+                role="img"
+                aria-label="有效期示例，30 秒剩余 24 秒"
+              >
+                <span
+                  class="pixel-progress-fill"
+                  style="--pixel-progress: 80%"
+                ></span>
+              </div>
+            </div>
+          </article>
+
+          <article
+            class="pixel-card"
+            aria-label="GitHub，Personal development workspace，合成账户"
+          >
+            <header class="pixel-card-header">
+              <span class="pixel-service-mark" aria-hidden="true">GH</span>
+              <div class="pixel-account-identity">
+                <p class="pixel-account-service">GitHub</p>
+                <h3
+                  class="pixel-account-name"
+                  title="Personal development workspace"
+                >
+                  Personal development workspace
+                </h3>
+                <p class="pixel-account-address">pixel-developer</p>
+              </div>
+              <details class="pixel-account-menu">
+                <summary aria-label="展示个人开发账户菜单">
+                  <svg class="pixel-icon" aria-hidden="true">
+                    <use href="#icon-dots" />
+                  </svg>
+                </summary>
+                <div class="pixel-menu-popover">
+                  <button class="pixel-menu-item" type="button" disabled>
+                    显示二维码</button
+                  ><button class="pixel-menu-item" type="button" disabled>
+                    复制账户 URI</button
+                  ><button class="pixel-menu-item" type="button" disabled>
+                    编辑账户</button
+                  ><button
+                    class="pixel-menu-item is-danger"
+                    type="button"
+                    disabled
+                  >
+                    删除账户
+                  </button>
+                  <p class="pixel-menu-note">菜单样式示例，未连接账户操作。</p>
+                </div>
+              </details>
+            </header>
+            <div class="pixel-otp-label">
+              当前验证码 <span class="pixel-badge">TOTP</span>
+            </div>
+            <div class="pixel-otp-line">
+              <span class="pixel-otp-value" aria-label="合成验证码，635 208"
+                >635 208</span
+              ><button
+                class="pixel-button is-icon"
+                type="button"
+                disabled
+                aria-label="复制验证码（合成数据，未启用）"
+              >
+                <svg class="pixel-icon" aria-hidden="true">
+                  <use href="#icon-copy" />
+                </svg>
+              </button>
+            </div>
+            <p class="pixel-otp-next">
+              下一码 <span class="pixel-next-value">104 783</span>
+            </p>
+            <div class="pixel-expiry" data-expiring="true">
+              <p class="pixel-expiry-label">
+                <span>即将到期示例</span><strong>剩余 5 秒</strong>
+              </p>
+              <div
+                class="pixel-progress"
+                role="img"
+                aria-label="有效期示例，30 秒剩余 5 秒"
+              >
+                <span
+                  class="pixel-progress-fill"
+                  style="--pixel-progress: 16.667%"
+                ></span>
+              </div>
+            </div>
+          </article>
+
+          <article
+            class="pixel-card"
+            aria-label="GitHub，开源项目发布与自动部署账户，合成账户"
+          >
+            <header class="pixel-card-header">
+              <span
+                class="pixel-service-mark"
+                data-tone="green"
+                aria-hidden="true"
+                >GH</span
+              >
+              <div class="pixel-account-identity">
+                <p class="pixel-account-service">GitHub</p>
+                <h3
+                  class="pixel-account-name"
+                  title="开源项目发布与自动部署账户"
+                >
+                  开源项目发布与自动部署账户
+                </h3>
+                <p class="pixel-account-address">studio-release</p>
+              </div>
+              <details class="pixel-account-menu">
+                <summary aria-label="展示开源项目账户菜单">
+                  <svg class="pixel-icon" aria-hidden="true">
+                    <use href="#icon-dots" />
+                  </svg>
+                </summary>
+                <div class="pixel-menu-popover">
+                  <button class="pixel-menu-item" type="button" disabled>
+                    显示二维码</button
+                  ><button class="pixel-menu-item" type="button" disabled>
+                    复制账户 URI</button
+                  ><button class="pixel-menu-item" type="button" disabled>
+                    编辑账户</button
+                  ><button
+                    class="pixel-menu-item is-danger"
+                    type="button"
+                    disabled
+                  >
+                    删除账户
+                  </button>
+                  <p class="pixel-menu-note">菜单样式示例，未连接账户操作。</p>
+                </div>
+              </details>
+            </header>
+            <div class="pixel-otp-label">
+              当前验证码 <span class="pixel-badge">TOTP</span>
+            </div>
+            <div class="pixel-otp-line">
+              <span class="pixel-otp-value" aria-label="合成验证码，815 493"
+                >815 493</span
+              ><button
+                class="pixel-button is-icon"
+                type="button"
+                disabled
+                aria-label="复制验证码（合成数据，未启用）"
+              >
+                <svg class="pixel-icon" aria-hidden="true">
+                  <use href="#icon-copy" />
+                </svg>
+              </button>
+            </div>
+            <p class="pixel-otp-next">
+              下一码 <span class="pixel-next-value">260 738</span>
+            </p>
+            <div class="pixel-expiry">
+              <p class="pixel-expiry-label">
+                <span>有效期示例</span><strong>剩余 24 秒</strong>
+              </p>
+              <div
+                class="pixel-progress"
+                role="img"
+                aria-label="有效期示例，30 秒剩余 24 秒"
+              >
+                <span
+                  class="pixel-progress-fill"
+                  style="--pixel-progress: 80%"
+                ></span>
+              </div>
+            </div>
+          </article>
+
+          <article
+            class="pixel-card"
+            aria-label="Microsoft，Design and research workspace，八位合成验证码账户"
+          >
+            <header class="pixel-card-header">
+              <span class="pixel-service-mark" aria-hidden="true">M</span>
+              <div class="pixel-account-identity">
+                <p class="pixel-account-service">Microsoft</p>
+                <h3
+                  class="pixel-account-name"
+                  title="Design and research workspace"
+                >
+                  Design and research workspace
+                </h3>
+                <p
+                  class="pixel-account-address"
+                  title="research.studio@example.invalid"
+                >
+                  research.studio@example.invalid
+                </p>
+              </div>
+              <details class="pixel-account-menu">
+                <summary aria-label="展示设计研究账户菜单">
+                  <svg class="pixel-icon" aria-hidden="true">
+                    <use href="#icon-dots" />
+                  </svg>
+                </summary>
+                <div class="pixel-menu-popover">
+                  <button class="pixel-menu-item" type="button" disabled>
+                    显示二维码</button
+                  ><button class="pixel-menu-item" type="button" disabled>
+                    复制账户 URI</button
+                  ><button class="pixel-menu-item" type="button" disabled>
+                    编辑账户</button
+                  ><button
+                    class="pixel-menu-item is-danger"
+                    type="button"
+                    disabled
+                  >
+                    删除账户
+                  </button>
+                  <p class="pixel-menu-note">菜单样式示例，未连接账户操作。</p>
+                </div>
+              </details>
+            </header>
+            <div class="pixel-otp-label">
+              当前验证码 <span class="pixel-badge">TOTP · 8 位</span>
+            </div>
+            <div class="pixel-otp-line">
+              <span
+                class="pixel-otp-value"
+                data-digits="8"
+                aria-label="合成验证码，9274 6810"
+                >9274 6810</span
+              ><button
+                class="pixel-button is-icon"
+                type="button"
+                disabled
+                aria-label="复制验证码（合成数据，未启用）"
+              >
+                <svg class="pixel-icon" aria-hidden="true">
+                  <use href="#icon-copy" />
+                </svg>
+              </button>
+            </div>
+            <p class="pixel-otp-next">
+              下一码 <span class="pixel-next-value">3168 4295</span>
+            </p>
+            <div class="pixel-expiry">
+              <p class="pixel-expiry-label">
+                <span>有效期示例</span><strong>剩余 24 秒</strong>
+              </p>
+              <div
+                class="pixel-progress"
+                role="img"
+                aria-label="有效期示例，30 秒剩余 24 秒"
+              >
+                <span
+                  class="pixel-progress-fill"
+                  style="--pixel-progress: 80%"
+                ></span>
+              </div>
+            </div>
+          </article>
+
+          <article
+            class="pixel-card"
+            aria-label="工作 VPN，研发内网与远程办公专用账户，HOTP 合成账户"
+          >
+            <header class="pixel-card-header">
+              <span
+                class="pixel-service-mark"
+                data-tone="amber"
+                aria-hidden="true"
+                >V</span
+              >
+              <div class="pixel-account-identity">
+                <p class="pixel-account-service">工作 VPN</p>
+                <h3
+                  class="pixel-account-name"
+                  title="研发内网与远程办公专用账户"
+                >
+                  研发内网与远程办公专用账户
+                </h3>
+                <p class="pixel-account-address">remote-studio</p>
+              </div>
+              <details class="pixel-account-menu">
+                <summary aria-label="展示远程办公账户菜单">
+                  <svg class="pixel-icon" aria-hidden="true">
+                    <use href="#icon-dots" />
+                  </svg>
+                </summary>
+                <div class="pixel-menu-popover">
+                  <button class="pixel-menu-item" type="button" disabled>
+                    显示二维码</button
+                  ><button class="pixel-menu-item" type="button" disabled>
+                    复制账户 URI</button
+                  ><button class="pixel-menu-item" type="button" disabled>
+                    编辑账户</button
+                  ><button
+                    class="pixel-menu-item is-danger"
+                    type="button"
+                    disabled
+                  >
+                    删除账户
+                  </button>
+                  <p class="pixel-menu-note">菜单样式示例，未连接账户操作。</p>
+                </div>
+              </details>
+            </header>
+            <div class="pixel-otp-label">
+              当前验证码 <span class="pixel-badge">HOTP</span>
+            </div>
+            <div class="pixel-otp-line">
+              <span class="pixel-otp-value" aria-label="合成验证码，408 572"
+                >408 572</span
+              ><button
+                class="pixel-button is-icon"
+                type="button"
+                disabled
+                aria-label="复制并推进计数器（合成数据，未启用）"
+                title="复制并推进计数器，静态预览未启用"
+              >
+                <svg class="pixel-icon" aria-hidden="true">
+                  <use href="#icon-copy" />
+                </svg>
+              </button>
+            </div>
+            <p class="pixel-otp-next">按计数器生成，无时间倒计时</p>
+            <div class="pixel-counter">
+              <span
+                >计数器示例
+                <strong class="pixel-counter-value">12</strong></span
+              ><span>复制后推进至 13</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="pixel-showcase-section" aria-labelledby="dialog-title">
+        <div class="pixel-section-heading">
+          <h2 class="pixel-section-title" id="dialog-title">主机弹窗样式</h2>
+          <p class="pixel-section-description">
+            静态表单示例 · 正式功能由 2FA 主机提供
+          </p>
+        </div>
+        <div class="pixel-dialog-stage">
+          <section class="pixel-dialog" aria-labelledby="edit-sample-title">
+            <div class="pixel-dialog-heading">
+              <h3 class="pixel-dialog-title" id="edit-sample-title">
+                编辑账户
+              </h3>
+              <button
+                class="pixel-button is-icon"
+                type="button"
+                disabled
+                aria-label="关闭弹窗（静态示例）"
+              >
+                <svg class="pixel-icon" aria-hidden="true">
+                  <use href="#icon-close" />
+                </svg>
+              </button>
+            </div>
+            <label class="pixel-field"
+              ><span>服务名称</span
+              ><input class="pixel-input" value="Google" disabled
+            /></label>
+            <label class="pixel-field"
+              ><span>账户名称</span
+              ><input
+                class="pixel-input"
+                value="工作邮箱与团队通知专用账户"
+                disabled
+              /><span class="pixel-field-help"
+                >列表会省略过长的名称，账户信息保留完整内容。</span
+              ></label
+            >
+            <p class="pixel-field-help">
+              这是样式示例，不包含真实密钥，也不会保存任何修改。
+            </p>
+            <div class="pixel-dialog-actions">
+              <button class="pixel-button" type="button" disabled>取消</button
+              ><button class="pixel-button is-primary" type="button" disabled>
+                保存修改
+              </button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <footer class="pixel-footer">
+        <span>Pixel · 静态视觉基础</span
+        ><span>本地字体与背景素材 · 无 CDN · 尚非可安装主题</span>
+      </footer>
+    </main>
+    <script>
+      // Visual controls only. No account API, OTP generation or clipboard access.
+      const themeRoot = document.body;
+      const schemeToggle = document.getElementById("scheme-toggle");
+      schemeToggle.addEventListener("click", () => {
+        const dark = themeRoot.dataset.colorScheme !== "dark";
+        themeRoot.dataset.colorScheme = dark ? "dark" : "light";
+        schemeToggle.setAttribute("aria-pressed", String(dark));
+        schemeToggle.setAttribute(
+          "aria-label",
+          dark ? "切换到浅色外观" : "切换到深色外观",
+        );
+      });
+      const menus = [...document.querySelectorAll(".pixel-account-menu")];
+      menus.forEach((menu) =>
+        menu.addEventListener("toggle", () => {
+          if (menu.open)
+            menus.forEach((other) => {
+              if (other !== menu) other.open = false;
+            });
+        }),
+      );
+      document.addEventListener("click", (event) => {
+        menus.forEach((menu) => {
+          if (menu.open && !menu.contains(event.target)) menu.open = false;
+        });
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape")
+          menus.forEach((menu) => {
+            if (menu.open) {
+              menu.open = false;
+              menu.querySelector("summary").focus();
+            }
+          });
+      });
+    </script>
+  </body>
+</html>

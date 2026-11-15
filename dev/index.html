@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pixel · Synthetic development shell</title>
+    <link rel="stylesheet" href="/src/styles/tokens.css" />
+    <link rel="stylesheet" href="/src/styles/components.css" />
+    <link rel="stylesheet" href="/src/styles/application.css" />
+    <link rel="stylesheet" href="/src/styles/inventory.css" />
+    <style>
+      body {
+        margin: 0;
+      }
+      .dev-banner {
+        padding: 12px;
+        background: #fff3b8;
+        color: #332600;
+        font: 14px/1.5 system-ui;
+        border-bottom: 2px solid #332600;
+      }
+      .dev-banner strong {
+        display: block;
+      }
+      #dev-output {
+        max-height: 90px;
+        overflow: auto;
+        margin: 0;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="dev-banner">
+      <strong
+        >Development shell · Synthetic accounts and clock · No real clipboard or
+        server writes</strong
+      >开发壳使用合成账户与时间；不是真实安装验收。主机流程只显示调用记录。
+      <pre id="dev-output" aria-live="polite"></pre>
+    </aside>
+    <div id="app"></div>
+    <script type="module" src="/dev/main.js"></script>
+  </body>
+</html>

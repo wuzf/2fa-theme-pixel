@@ -1,0 +1,807 @@
+/* RPG inventory: a bag window of item slots with category tabs, under an
+   app bar with the menu, the title and search. */
+/* Slots are as wide as the default interface's cards (at least 280px). */
+.pixel-theme {
+  --pixel-slot: 280px;
+}
+.pixel-theme[data-density="compact"] {
+  --pixel-slot: 240px;
+}
+
+/* App bar: the menu on the left, the title centred, search on the right.
+   Search opens in place of the title. */
+.pixel-theme .pixel-topbar {
+  /* The app bar stays at the top while the accounts scroll; above open card menus. */
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  box-shadow: 0 4px 0 var(--pixel-track);
+}
+.pixel-theme .pixel-topbar-inner {
+  display: grid;
+  grid-template-columns: minmax(44px, 1fr) auto minmax(44px, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 60px;
+  padding-block: 8px;
+}
+.pixel-theme .pixel-topbar-actions {
+  grid-column: 1;
+  justify-self: start;
+  min-width: 0;
+  gap: 0;
+}
+.pixel-theme .pixel-topbar .pixel-brand {
+  grid-column: 2;
+  justify-content: center;
+}
+.pixel-theme .pixel-topbar .pixel-brand-name {
+  font-size: 22px;
+  text-align: center;
+}
+.pixel-theme .pixel-topbar-tools {
+  position: relative;
+  grid-column: 3;
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+}
+.pixel-theme .pixel-topbar[data-searching="true"] .pixel-topbar-inner {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+/* View options drop down from the bar, under the filter button. */
+.pixel-theme .pixel-topbar-tools .pixel-display-disclosure {
+  display: block;
+}
+.pixel-theme .pixel-topbar-tools .pixel-display-panel {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 12px);
+  right: 0;
+  width: min(640px, calc(100vw - 32px));
+  box-shadow: var(--pixel-offset) var(--pixel-offset) 0 var(--pixel-shadow);
+}
+.pixel-theme .pixel-topbar-tools .pixel-display-panel[hidden] {
+  display: none;
+}
+.pixel-theme .pixel-topbar .pixel-button.is-quiet {
+  width: 44px;
+  min-width: 44px;
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+}
+.pixel-theme .pixel-topbar .pixel-button.is-quiet[aria-expanded="true"] {
+  border-color: transparent;
+  background: var(--pixel-track);
+}
+@media (hover: hover) {
+  .pixel-theme .pixel-topbar .pixel-button.is-quiet:not(:disabled):hover {
+    border-color: transparent;
+    background: var(--pixel-track);
+  }
+}
+@media (hover: none) {
+  .pixel-theme .pixel-topbar .pixel-button.is-quiet:not(:disabled):active {
+    border-color: transparent;
+    background: var(--pixel-track);
+  }
+}
+/* Pixel glyphs: three bars for the menu, a square lens with a stepped handle for search. */
+.pixel-theme .pixel-bar-icon {
+  position: relative;
+  display: block;
+  color: var(--pixel-ink);
+}
+.pixel-theme .pixel-bar-icon.is-menu {
+  width: 20px;
+  height: 16px;
+  background:
+    linear-gradient(currentColor, currentColor) top / 100% 4px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 100% 4px no-repeat,
+    linear-gradient(currentColor, currentColor) bottom / 100% 4px no-repeat;
+}
+.pixel-theme .pixel-bar-icon.is-sort {
+  width: 18px;
+  height: 14px;
+  background:
+    linear-gradient(currentColor, currentColor) top center / 100% 2px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 60% 2px no-repeat,
+    linear-gradient(currentColor, currentColor) bottom center / 24% 2px
+      no-repeat;
+}
+.pixel-theme .pixel-bar-icon.is-search {
+  width: 14px;
+  height: 14px;
+  /* The stepped handle hangs 9px past the 20px lens; room for it centres the whole glyph. */
+  margin: 0 9px 9px 0;
+  border: 3px solid currentColor;
+}
+.pixel-theme .pixel-bar-icon.is-search::after {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  width: 3px;
+  height: 3px;
+  background: currentColor;
+  box-shadow:
+    3px 3px 0 currentColor,
+    6px 6px 0 currentColor;
+  content: "";
+}
+.pixel-theme
+  .pixel-search-toggle[aria-expanded="true"]
+  .pixel-bar-icon.is-search {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 0;
+  background:
+    linear-gradient(
+      45deg,
+      transparent 42%,
+      currentColor 42% 58%,
+      transparent 58%
+    ),
+    linear-gradient(
+      -45deg,
+      transparent 42%,
+      currentColor 42% 58%,
+      transparent 58%
+    );
+}
+.pixel-theme
+  .pixel-search-toggle[aria-expanded="true"]
+  .pixel-bar-icon.is-search::after {
+  display: none;
+}
+.pixel-theme .pixel-topbar .pixel-search {
+  grid-column: 2;
+  min-height: 44px;
+  box-shadow: inset 2px 2px 0 var(--pixel-track);
+}
+.pixel-theme .pixel-topbar .pixel-search[hidden] {
+  display: none;
+}
+.pixel-theme .pixel-topbar .pixel-search input {
+  min-height: 38px;
+}
+/* The bar's own close button clears the search, so the field needs no second ×. */
+.pixel-theme .pixel-topbar .pixel-search .pixel-button.is-icon {
+  display: none;
+}
+
+/* While searching, the field takes the room of the title and the filter. */
+.pixel-theme .pixel-topbar[data-searching="true"] .pixel-display-disclosure {
+  display: none;
+}
+
+/* Bag window. */
+.pixel-theme .pixel-bag-window {
+  min-width: 0;
+  padding: 16px 18px 20px;
+  border: var(--pixel-border) solid var(--pixel-ink);
+  background: var(--pixel-panel);
+  box-shadow: var(--pixel-offset) var(--pixel-offset) 0 var(--pixel-shadow);
+}
+.pixel-theme .pixel-window-title {
+  margin: 0 0 12px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+/* Window header: the title, then the service filter and view options. */
+.pixel-theme .pixel-bag-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 20px;
+  margin-bottom: 14px;
+}
+.pixel-theme .pixel-bag-header .pixel-window-title {
+  flex: 1 1 auto;
+  margin: 0;
+  font-size: 15px;
+}
+.pixel-theme .pixel-bag-header .pixel-toolbar {
+  flex: 0 1 260px;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  margin: 0;
+}
+/* The category tabs already filter by service at every width, so the select
+   would only repeat them; it stays in the DOM for the SDK binding. */
+.pixel-theme .pixel-bag-header .pixel-service-filter {
+  display: none;
+}
+
+.pixel-theme .pixel-tabs {
+  display: flex;
+  gap: 0;
+  margin: 0 -18px 16px;
+  padding: 0 18px;
+  border-bottom: var(--pixel-border) solid var(--pixel-ink);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.pixel-theme .pixel-tab {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  max-width: 220px;
+  min-height: 40px;
+  margin-bottom: calc(var(--pixel-border) * -1);
+  padding: 6px 12px;
+  border: var(--pixel-border) solid transparent;
+  border-bottom: 0;
+  background: transparent;
+  color: var(--pixel-muted);
+  font: inherit;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pixel-theme .pixel-tab-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pixel-theme .pixel-tab-count {
+  font-family: var(--pixel-display);
+  font-size: 11px;
+}
+@media (hover: hover) {
+  .pixel-theme .pixel-tab:not(:disabled):hover {
+    color: var(--pixel-ink);
+  }
+}
+@media (hover: none) {
+  .pixel-theme .pixel-tab:not(:disabled):active {
+    color: var(--pixel-ink);
+  }
+}
+.pixel-theme .pixel-tab[aria-pressed="true"] {
+  border-color: var(--pixel-ink);
+  background: var(--pixel-panel);
+  color: var(--pixel-ink);
+  font-weight: 700;
+}
+.pixel-theme .pixel-tab:focus-visible {
+  outline-offset: -6px;
+}
+
+/* Slots. Groups dissolve into one grid; in smart grouping each service starts with its title row. */
+.pixel-theme .pixel-bag-window .pixel-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--pixel-slot), 1fr));
+  gap: 10px;
+}
+.pixel-theme .pixel-bag-window .pixel-group,
+.pixel-theme .pixel-bag-window .pixel-account-grid {
+  display: contents;
+}
+.pixel-theme .pixel-bag-window .pixel-group-title {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 -2px;
+  color: var(--pixel-muted);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.pixel-theme .pixel-bag-window .pixel-group:first-child .pixel-group-title {
+  margin-top: 0;
+}
+/* A square bullet and a dotted rule, like a section label in an item bag. */
+.pixel-theme .pixel-bag-window .pixel-group-title::before {
+  content: "";
+  flex: 0 0 8px;
+  height: 8px;
+  background: var(--pixel-ink);
+}
+.pixel-theme .pixel-bag-window .pixel-group-title::after {
+  content: "";
+  flex: 1 1 auto;
+  border-top: 2px dotted var(--pixel-track);
+}
+.pixel-theme .pixel-bag-window .pixel-group-title[hidden] {
+  display: none;
+}
+/* Each slot is a complete item card: who it is, the code to copy, the next code and its timer. */
+.pixel-theme .pixel-bag-window .pixel-account-grid > .pixel-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 10px;
+  border: var(--pixel-border) solid var(--pixel-ink);
+  background:
+    linear-gradient(var(--pixel-panel), var(--pixel-panel)) padding-box,
+    var(--pixel-ink);
+  box-shadow: inset 0 0 0 3px var(--pixel-track);
+  cursor: pointer;
+}
+/* Only a mouse lights the card, and only where a click copies the current code:
+   not on the menu (the card flashed when it was opened) or another button such as
+   "next", which copies the next code. Touch keeps the hover after a tap. */
+@media (hover: hover) {
+  .pixel-theme
+    .pixel-bag-window
+    .pixel-account-grid
+    > .pixel-card:hover:not(:has(.pixel-account-menu:hover)):not(
+      :has(button:not([data-action="copy"]):hover)
+    ) {
+    box-shadow: inset 0 0 0 3px var(--pixel-amber-fill);
+  }
+}
+/* Icon, service and menu share the first line; the account takes the full width below. */
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-card-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 0;
+}
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-service-mark {
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  font-size: 15px;
+  --pixel-icon-cell: 1.5px;
+}
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-account-identity {
+  display: contents;
+}
+/* Three steps of emphasis: the code first, then the service, then the account
+   and the next code in a softer ink. */
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-account-name {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: var(--pixel-ink);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-account-address {
+  grid-column: 1 / -1;
+  min-width: 0;
+  margin: 0;
+  text-align: left;
+  overflow: hidden;
+  color: var(--pixel-soft);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-hotp-label {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-service-mark {
+  grid-column: 1;
+  grid-row: 1;
+}
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-account-menu {
+  grid-column: 3;
+  grid-row: 1;
+  margin: -4px -6px 0 0;
+}
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-codes {
+  width: 100%;
+  margin: 0;
+}
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-copy-code {
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 4px 6px;
+}
+/* The code copies the same as the rest of the card, which is already lit, so it
+   adds no highlight of its own. */
+@media (hover: hover) {
+  .pixel-theme
+    .pixel-bag-window
+    .pixel-account-grid
+    .pixel-copy-code:not(:disabled):hover {
+    background: transparent;
+  }
+}
+@media (hover: none) {
+  .pixel-theme
+    .pixel-bag-window
+    .pixel-account-grid
+    .pixel-copy-code:not(:disabled):active {
+    background: transparent;
+  }
+}
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-otp-value {
+  color: var(--pixel-ink);
+  font-size: 26px;
+}
+.pixel-theme
+  .pixel-bag-window
+  .pixel-account-grid
+  .pixel-otp-value:is(
+    [data-digits="8"],
+    [data-digits="9"],
+    [data-digits="10"]
+  ) {
+  font-size: 18px;
+}
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-copy-symbol {
+  display: none;
+}
+/* The next code has no label, as in the built-in view: a smaller, softer code
+   centred under the current one (beside it in the compact and phone rows). */
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-otp-next {
+  gap: 6px;
+  min-height: 28px;
+  margin: 2px auto 0;
+  padding: 0;
+  color: var(--pixel-soft);
+  font-size: 11px;
+}
+/* With the card unlit, "next" is the only thing lit. */
+@media (hover: hover) {
+  .pixel-theme
+    .pixel-bag-window
+    .pixel-account-grid
+    .pixel-otp-next:not(:disabled):hover,
+  .pixel-theme
+    .pixel-bag-window
+    .pixel-account-grid
+    .pixel-otp-next:not(:disabled):hover
+    .pixel-next-value {
+    color: var(--pixel-green);
+  }
+}
+@media (hover: none) {
+  .pixel-theme
+    .pixel-bag-window
+    .pixel-account-grid
+    .pixel-otp-next:not(:disabled):active,
+  .pixel-theme
+    .pixel-bag-window
+    .pixel-account-grid
+    .pixel-otp-next:not(:disabled):active
+    .pixel-next-value {
+    color: var(--pixel-green);
+  }
+}
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-next-value {
+  color: var(--pixel-soft);
+  font-size: 12px;
+}
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-code-status {
+  font-size: 11px;
+}
+/* The window's own timer: the durability bar with the seconds left beside it. */
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-expiry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: auto 0 0;
+  padding: 0;
+  border: 0;
+}
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-expiry-label {
+  order: 2;
+  margin: 0;
+  font-size: 11px;
+}
+.pixel-theme
+  .pixel-bag-window
+  .pixel-account-grid
+  .pixel-card:not([data-type="HOTP"])
+  .pixel-expiry-label
+  > span {
+  display: none;
+}
+/* HOTP has no timer: the footer names the counter instead of showing a bare number. */
+.pixel-theme
+  .pixel-bag-window
+  .pixel-account-grid
+  .pixel-card[data-type="HOTP"]
+  .pixel-expiry-label {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  order: 0;
+  color: var(--pixel-muted);
+}
+.pixel-theme
+  .pixel-bag-window
+  .pixel-account-grid
+  .pixel-card[data-type="HOTP"]
+  .pixel-expiry-label
+  > strong {
+  color: var(--pixel-ink);
+  font-family: var(--pixel-display);
+  font-size: 13px;
+}
+.pixel-theme .pixel-bag-window .pixel-account-grid .pixel-progress {
+  flex: 1;
+  height: 10px;
+}
+
+@media (max-width: 600px) {
+  .pixel-theme {
+    --pixel-slot: 140px;
+  }
+  .pixel-theme .pixel-bag-window {
+    padding: 12px 10px 14px;
+  }
+  .pixel-theme .pixel-tabs {
+    margin-inline: -10px;
+    padding-inline: 10px;
+  }
+  /* Header: the title, then the service filter across the window. */
+  .pixel-theme .pixel-bag-header {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .pixel-theme .pixel-bag-header .pixel-toolbar {
+    flex: 1 1 100%;
+  }
+  .pixel-theme .pixel-topbar-inner {
+    padding-inline: 8px;
+  }
+  .pixel-theme .pixel-topbar-tools .pixel-display-panel {
+    right: -8px;
+    width: calc(100vw - 16px);
+  }
+  /* Two slots per row leave room for the account, which tells same-service slots apart. */
+  .pixel-theme .pixel-bag-window .pixel-groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .pixel-theme .pixel-bag-window .pixel-account-grid > .pixel-card {
+    gap: 6px;
+    padding: 8px;
+  }
+  .pixel-theme .pixel-bag-window .pixel-account-grid .pixel-card-header {
+    gap: 6px;
+  }
+  .pixel-theme .pixel-bag-window .pixel-account-grid .pixel-service-mark {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+  }
+  .pixel-theme .pixel-bag-window .pixel-account-grid .pixel-otp-value {
+    font-size: 20px;
+  }
+  .pixel-theme
+    .pixel-bag-window
+    .pixel-account-grid
+    .pixel-otp-value:is(
+      [data-digits="8"],
+      [data-digits="9"],
+      [data-digits="10"]
+    ) {
+    font-size: 15px;
+  }
+}
+/* Phones: one slot per row, so the service and account read in full; the code
+   and the next code share a line to keep the slot short. */
+@media (max-width: 480px) {
+  .pixel-theme .pixel-bag-window .pixel-groups {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pixel-theme .pixel-bag-window .pixel-account-grid > .pixel-card {
+    padding: 10px 12px;
+  }
+  .pixel-theme .pixel-bag-window .pixel-account-grid .pixel-account-name {
+    display: -webkit-box;
+    font-size: 15px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  .pixel-theme .pixel-bag-window .pixel-account-grid .pixel-codes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+  }
+  .pixel-theme .pixel-bag-window .pixel-account-grid .pixel-copy-code {
+    justify-content: flex-start;
+    width: auto;
+    margin-left: -6px;
+  }
+  .pixel-theme .pixel-bag-window .pixel-account-grid .pixel-otp-next {
+    margin: 0 0 0 auto;
+  }
+  .pixel-theme .pixel-bag-window .pixel-account-grid .pixel-otp-value {
+    font-size: 26px;
+  }
+  .pixel-theme
+    .pixel-bag-window
+    .pixel-account-grid
+    .pixel-otp-value:is(
+      [data-digits="8"],
+      [data-digits="9"],
+      [data-digits="10"]
+    ) {
+    font-size: 20px;
+  }
+}
+
+/* Compact slots, on every screen: the service and the account share the first
+   line, the next code sits beside the code, and the slot loses air. */
+.pixel-theme[data-density="compact"]
+  .pixel-bag-window
+  .pixel-account-grid
+  > .pixel-card {
+  gap: 4px;
+  padding: 6px 8px;
+}
+.pixel-theme[data-density="compact"]
+  .pixel-bag-window
+  .pixel-account-grid
+  .pixel-account-identity {
+  display: flex;
+  grid-column: 2;
+  grid-row: 1;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+.pixel-theme[data-density="compact"]
+  .pixel-bag-window
+  .pixel-account-grid
+  .pixel-account-name {
+  display: block;
+  flex: 0 1 auto;
+  white-space: nowrap;
+  -webkit-line-clamp: unset;
+}
+.pixel-theme[data-density="compact"]
+  .pixel-bag-window
+  .pixel-account-grid
+  .pixel-account-address {
+  flex: 1 1 0;
+}
+.pixel-theme[data-density="compact"]
+  .pixel-bag-window
+  .pixel-account-grid
+  .pixel-hotp-label {
+  flex: 0 0 auto;
+}
+.pixel-theme[data-density="compact"]
+  .pixel-bag-window
+  .pixel-account-grid
+  .pixel-codes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 12px;
+}
+.pixel-theme[data-density="compact"]
+  .pixel-bag-window
+  .pixel-account-grid
+  .pixel-copy-code {
+  justify-content: flex-start;
+  width: auto;
+  margin-left: -6px;
+}
+.pixel-theme[data-density="compact"]
+  .pixel-bag-window
+  .pixel-account-grid
+  .pixel-otp-next {
+  min-height: 28px;
+  margin: 0 0 0 auto;
+}
+
+/* Pixel text on its grid. Fusion Pixel draws every glyph on a 12px grid and has
+   one weight: at other sizes the glyphs fall between screen pixels and blur, and
+   a synthesised bold smears them together ("28秒"). With pixel text on, text is
+   12px (24px for page titles and the management groups) and never bold;
+   brighter ink marks emphasis.
+   Silkscreen (codes, counts, the title) keeps its sizes and is never bolded. */
+.pixel-theme {
+  font-synthesis: none;
+}
+.pixel-theme[data-pixel-text="true"] {
+  font-size: 12px;
+}
+.pixel-theme[data-pixel-text="true"]
+  :is(
+    .pixel-tab,
+    .pixel-group-title,
+    .pixel-account-name,
+    .pixel-account-address,
+    .pixel-otp-next,
+    .pixel-code-status,
+    .pixel-expiry-label,
+    .pixel-expiry-label strong,
+    .pixel-menu-note,
+    .pixel-badge,
+    .pixel-operation,
+    .pixel-select-field select,
+    .pixel-license-title,
+    .pixel-empty-state h3
+  ) {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.pixel-theme[data-pixel-text="true"]
+  .pixel-bag-window
+  .pixel-account-grid
+  :is(
+    .pixel-account-name,
+    .pixel-account-address,
+    .pixel-otp-next,
+    .pixel-code-status,
+    .pixel-expiry-label
+  ) {
+  font-size: 12px;
+  font-weight: 400;
+}
+.pixel-theme[data-pixel-text="true"]
+  :is(.pixel-section-title, .pixel-dialog-title, .pixel-group-toggle) {
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* Copying presses the card, like the built-in view. The card copies from anywhere but
+   its menu and other controls (copyFromCard), so those do not press it. */
+.pixel-theme
+  .pixel-bag-window
+  .pixel-account-grid
+  > .pixel-card:active:not(
+    :has(
+      .pixel-account-menu :active,
+      :is(
+        a,
+        input,
+        select,
+        textarea,
+        label,
+        button:not([data-action="copy"], [data-action="next"])
+      ):active
+    )
+  ) {
+  transform: translate(2px, 2px);
+  background:
+    linear-gradient(var(--pixel-green-soft), var(--pixel-green-soft))
+      padding-box,
+    var(--pixel-ink);
+  box-shadow: inset 0 0 0 3px var(--pixel-amber-fill);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pixel-theme
+    .pixel-bag-window
+    .pixel-account-grid
+    > .pixel-card:active:not(
+      :has(
+        .pixel-account-menu :active,
+        :is(
+          a,
+          input,
+          select,
+          textarea,
+          label,
+          button:not([data-action="copy"], [data-action="next"])
+        ):active
+      )
+    ) {
+    transform: none;
+  }
+}
+
+/* The browser's tap highlight is a square over rounded controls; pressing
+   shows the control's own hover look instead (@media (hover: none) twins). */
+.pixel-theme {
+  -webkit-tap-highlight-color: transparent;
+}

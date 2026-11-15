@@ -1,0 +1,24 @@
+{
+  "name": "2fa-theme-pixel",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Pixel: an independent pixel-art frontend for the 2FA theme SDK",
+  "license": "MIT",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "dev": "node scripts/dev.js",
+    "test": "node --test tests/*.test.js",
+    "test:host": "node scripts/validate-host.js",
+    "format": "prettier --write src scripts tests dev theme.config.js package.json README.md",
+    "format:check": "prettier --check src scripts tests dev theme.config.js package.json README.md"
+  },
+  "devDependencies": {
+    "fflate": "0.8.3",
+    "happy-dom": "20.14.5",
+    "prettier": "3.6.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

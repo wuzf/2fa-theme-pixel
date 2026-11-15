@@ -1,0 +1,83 @@
+/* Pixel. Local fonts; their notices are in /licenses. */
+@font-face {
+  font-family: "Pixel2FA Display";
+  src: url("../../assets/silkscreen-latin-400-normal.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pixel2FA Text";
+  src: url("../../assets/fusion-pixel-12px-proportional-sc-latin-400-normal.woff2")
+    format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+.pixel-theme {
+  --pixel-canvas: #edf0e2;
+  --pixel-panel: #fbfcf4;
+  --pixel-ink: #20241d;
+  --pixel-muted: #625e56;
+  --pixel-soft: #77736a; /* account and next code: 4.6:1 on the panel */
+  --pixel-shadow: #20241d;
+  --pixel-track: #dbe1cc;
+  --pixel-grid: #ded9cc;
+  --pixel-green: #247942;
+  --pixel-green-fill: #a8d49b;
+  --pixel-green-soft: #e2efda;
+  --pixel-blue: #175fc2;
+  --pixel-amber: #805800;
+  --pixel-amber-fill: #e0b747;
+  /* Timer bars: at least 3:1 against the track, which the pale fills are not. */
+  --pixel-progress-fill: #3f8c4c;
+  --pixel-progress-amber: #a37310;
+  --pixel-amber-soft: #fbefca;
+  --pixel-red: #b22b2b;
+  --pixel-red-soft: #fbe4df;
+  --pixel-border: 3px;
+  --pixel-offset: 4px;
+  --pixel-font:
+    ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei",
+    sans-serif;
+  --pixel-display: "Pixel2FA Display", ui-monospace, monospace;
+  --pixel-text: "Pixel2FA Text", var(--pixel-font);
+  --pixel-content-width: 1400px; /* the default interface's width */
+  --pixel-focus: 3px dashed var(--pixel-blue);
+  --pixel-landscape-opacity: 0.26;
+  color-scheme: light;
+}
+
+.pixel-theme[data-color-scheme="dark"] {
+  --pixel-canvas: #131816;
+  --pixel-panel: #1c2320;
+  --pixel-ink: #e3eadb;
+  --pixel-muted: #b2aea3;
+  --pixel-soft: #959187; /* 5.1:1 on the panel */
+  --pixel-shadow: #08080d;
+  --pixel-track: #34343e;
+  --pixel-grid: #34343e;
+  --pixel-green: #91d596;
+  --pixel-green-fill: #91d596;
+  --pixel-green-soft: #273d2e;
+  --pixel-blue: #8abaff;
+  --pixel-amber: #f3ce74;
+  --pixel-amber-fill: #e4bd5b;
+  --pixel-progress-fill: var(--pixel-green-fill);
+  --pixel-progress-amber: var(--pixel-amber-fill);
+  --pixel-amber-soft: #3c3320;
+  --pixel-red: #ffa49a;
+  --pixel-red-soft: #482b2d;
+  --pixel-landscape-opacity: 0.13;
+  color-scheme: dark;
+}
+
+/* The bundled Fusion Pixel font includes Chinese glyphs despite its filename.
+   Keep a readable system fallback for any glyph the local font does not cover. */
+.pixel-theme[data-pixel-text="true"] {
+  --pixel-font:
+    "Pixel2FA Text", ui-sans-serif, system-ui, "PingFang SC", "Microsoft YaHei",
+    sans-serif;
+}
